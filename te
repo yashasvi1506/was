@@ -1,0 +1,107 @@
+#LL(1)
+
+first = {"S":["(","a"],"L":["(","a"],"M":["@",","]}
+
+follow = {"S":["$",")"],"L":[")"],"M":[")"]}
+
+prod = ["S->(L)","S->a","L->SM","M->@","M->,SM"]
+
+LL={}
+t = ["a","(",")",",","$"]
+non_t = ["S","L","M"]
+
+for i in non_t:
+    x=i
+    d={}
+    for j in prod:
+        y = j[3]
+        if j[0]==x:
+            
+            if y in t:
+                if y in d:
+                    d[y].append(j)
+                else:
+                    d[y] = [j]
+            elif y in non_t:
+                z = first[y]
+                for q in z:
+                    if q in d:
+                        d[q].append(j)
+                    else:
+                        d[q] = [j]
+            else:
+                z = follow[x]
+                for q in z:
+                    if q in d:
+                        d[q].append(j)
+                    else:
+                        d[q] = [j]
+    LL[x] = d
+print(LL)
+
+
+
+
+
+#first
+
+n=int(input())
+s=[]
+for i in range(n):
+    s.append(input())
+
+first={}
+for i in s:
+    x=i[0]
+    if not i[3].isupper():
+        first[x] = i[3]
+
+for i in s:
+    y=i[0]
+    if i[3].isupper():
+        if i[3] in first:
+            first[y] = first[i[3]]
+
+print(first)
+
+
+
+
+
+
+#follow
+
+n=int(input())
+c=input()
+s=[]
+for i in range(n):
+    s.append(input())
+
+first={}
+for i in s:
+    x=i[0]
+    if not i[3].isupper():
+        first[x] = i[3]
+
+for i in s:
+    y=i[0]
+    if i[3].isupper():
+        if i[3] in first:
+            first[y] = first[i[3]]
+
+follow = {}
+
+follow[c] = "$"
+for i in s:
+    x=i
+    for j in range(3,len(i)):
+        if x[j].isupper() and j==len(i)-1:
+            follow[x[j]] = "follow of " + x[0]
+        if x[j].isupper():
+            if j+1<len(i):
+                if x[j+1].isupper():
+                    follow[x[j]] = first[x[j+1]]
+                else:
+                    follow[x[j]] = x[j+1]
+print(first)
+print(follow)
